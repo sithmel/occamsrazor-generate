@@ -25,7 +25,10 @@
     "eslint": "^1.10.3",
     "husky": "^0.10.2",
     "mocha": "^2.1.0",
-    "npm-release": "^1.0.0"
+    "npm-release": "^1.0.0",
+    "regexp-clone": "0.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chance": "^1.0.10"
+  }
 }
