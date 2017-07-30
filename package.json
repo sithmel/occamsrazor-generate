@@ -1,6 +1,6 @@
 {
   "name": "occamsrazor-generate",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "data generator",
   "main": "index.js",
   "scripts": {
