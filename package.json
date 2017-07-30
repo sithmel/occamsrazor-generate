@@ -1,7 +1,7 @@
 {
   "name": "occamsrazor-generate",
   "version": "0.0.0",
-  "description": "generate objects of a specific shape",
+  "description": "data generator",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/**/*.js",
@@ -29,6 +29,7 @@
     "regexp-clone": "0.0.1"
   },
   "dependencies": {
-    "chance": "^1.0.10"
+    "chance": "^1.0.10",
+    "iter-tools": "^1.3.0"
   }
 }

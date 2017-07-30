@@ -1,5 +1,6 @@
 var assert = require('chai').assert;
 var generate = require('../lib/generate');
+var range = require('iter-tools/lib/range');
 
 describe('generate', function () {
   it('is a function', function () {
@@ -69,5 +70,8 @@ describe('generate', function () {
     var buffer = Buffer.from('123');
     assert.isFalse(generate(buffer)() === buffer);
     assert.equal(generate(buffer)().toString(), '123');
+  });
+  it('unrolls an iterator', function () {
+    assert.deepEqual(generate(range(3))(), [0, 1, 2]);
   });
 });
