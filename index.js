@@ -1,3 +1,3 @@
-var match = require('./lib/generate');
+var generate = require('./lib/generate');
 
 module.exports = generate;
