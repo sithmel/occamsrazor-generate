@@ -56,7 +56,7 @@ describe('generate', function () {
   it('clones a RegExp', function () {
     var re = /123/;
     assert.isFalse(generate(re)() === re);
-    assert.equal(generate(re)().toString(), '/123/');
+    assert.equal(generate(re)(), '123');
   });
   it('clones a Promise', function (done) {
     var p = Promise.resolve();

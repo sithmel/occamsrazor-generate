@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var shuffle = require('../extra/shuffle');
 var pick = require('../extra/pick');
-var sequence = require('../extra/sequence');
+var many = require('../extra/many');
 
 describe('shuffle', function () {
   it('is a function', function () {
@@ -30,37 +30,72 @@ describe('pick', function () {
   });
 });
 
-describe('sequence', function () {
+describe('many', function () {
   it('is a function', function () {
-    assert.typeOf(sequence, 'function');
+    assert.typeOf(many, 'function');
   });
-  it('sequences', function () {
-    var func = sequence(2, 1);
+  it('defaults to 1', function () {
+    var func = many(1);
+    var items = func();
+    assert.deepEqual(items, [1]);
+  });
+  it('uses a number as options', function () {
+    var func = many(1, 2);
     var items = func();
     assert.deepEqual(items, [1, 1]);
   });
-  it('sequences (using times)', function () {
-    var func = sequence({ times: 2 }, 1);
+  it('uses len', function () {
+    var func = many(1, { len: 2 });
     var items = func();
     assert.deepEqual(items, [1, 1]);
   });
-  it('sequences (using min, max)', function () {
-    var func = sequence({ min: 1, max: 3 }, 1);
+  it('uses minLen, maxLen', function () {
+    var func = many(1, { minLen: 1, maxLen: 3 });
     var items = func();
     assert.isTrue(items.length >= 1 && items.length <= 3);
   });
-  it('sequences (using unique)', function () {
-    var func = sequence({ times: 2, unique: true }, pick([1, 2, 3, 4]));
+  it('uses unique', function () {
+    var func = many(pick([1, 2, 3, 4]), { len: 2, unique: true });
     var items = func();
     assert.equal(items.length, 2);
     assert.notEqual(items[0], items[1]);
   });
-  it('sequences (key)', function () {
-    var func = sequence({ times: 2, key: function (val) {
+  it('generates a object', function () {
+    var func = many(pick([1, 2]), { len: 2, key: function (val) {
       return val.toString();
-    } }, pick([1, 2]));
+    } });
     var items = func();
     assert.deepEqual(items, { '1': 1, '2': 2 });
+  });
+  it('uses a map', function () {
+    var func = many(1, { len: 2, map: function (n) { return n + 3; } });
+    var items = func();
+    assert.deepEqual(items, [4, 4]);
+  });
+  it('uses a map with an object', function () {
+    var func = many(pick([1, 2]), { len: 2, key: function (val) {
+      return val.toString();
+    },
+    map: function (n) { return n + 3; }});
+    var items = func();
+    assert.deepEqual(items, { '1': 4, '2': 5 });
+  });
+  describe('alternative init style', function () {
+    it('init using opts', function () {
+      var func = many(1).opts({ len: 2 });
+      var items = func();
+      assert.deepEqual(items, [1, 1]);
+    });
+    it('init using len', function () {
+      var func = many(1).len(2);
+      var items = func();
+      assert.deepEqual(items, [1, 1]);
+    });
+    it('init using chaining', function () {
+      var func = many(1).minLen(1).maxLen(3);
+      var items = func();
+      assert.isTrue(items.length >= 1 && items.length <= 3);
+    });
   });
 
 });
