@@ -58,19 +58,6 @@ describe('generate', function () {
     assert.isFalse(generate(re)() === re);
     assert.equal(generate(re)(), '123');
   });
-  it('clones a Promise', function (done) {
-    var p = Promise.resolve();
-    assert.isFalse(generate(p)() === p);
-    generate(p)()
-    .then(function () {
-      done();
-    });
-  });
-  it('clones a Buffer', function () {
-    var buffer = Buffer.from('123');
-    assert.isFalse(generate(buffer)() === buffer);
-    assert.equal(generate(buffer)().toString(), '123');
-  });
   it('unrolls an iterator', function () {
     assert.deepEqual(generate(range(3))(), [0, 1, 2]);
   });

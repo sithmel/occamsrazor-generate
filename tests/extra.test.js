@@ -1,7 +1,10 @@
 var assert = require('chai').assert;
 var shuffle = require('../extra/shuffle');
 var pick = require('../extra/pick');
-var many = require('../extra/many');
+var mapItems = require('../extra/mapItems');
+var mapItem = require('../extra/mapItem');
+var arrayOf = require('../extra/arrayOf');
+var objectOf = require('../extra/objectOf');
 
 describe('shuffle', function () {
   it('is a function', function () {
@@ -30,72 +33,98 @@ describe('pick', function () {
   });
 });
 
-describe('many', function () {
+describe('mapItem', function () {
   it('is a function', function () {
-    assert.typeOf(many, 'function');
+    assert.typeOf(mapItem, 'function');
+  });
+  it('maps a single item', function () {
+    var func = mapItem(3, function (item) { return item * 2; });
+    var item = func();
+    assert.equal(item, 6);
+  });
+  it('maps a single item using iteratee', function () {
+    var func = mapItem({ a: 3 }, 'a');
+    var item = func();
+    assert.equal(item, 3);
+  });
+});
+
+describe('mapItems', function () {
+  it('is a function', function () {
+    assert.typeOf(mapItems, 'function');
+  });
+  it('maps an array', function () {
+    var func = mapItems([1, 2, 3], function (item, index) { return item * index; });
+    var item = func();
+    assert.deepEqual(item, [0, 2, 6]);
+  });
+  it('maps an array using iteratee', function () {
+    var func = mapItems([{ a: 1 }, { a: 2 }, { a: 3 }], 'a');
+    var item = func();
+    assert.deepEqual(item, [1, 2, 3]);
+  });
+  it('maps an object', function () {
+    var func = mapItems({ a: 1, b: 2, c:  3}, function (v, key) { return v + key; });
+    var item = func();
+    assert.deepEqual(item, { a: '1a', b: '2b', c: '3c' });
+  });
+  it('maps an object using iteratee', function () {
+    var func = mapItems({ a: { id: 1 }, b: { id: 2 }, c: { id: 3 }}, 'id');
+    var item = func();
+    assert.deepEqual(item, { a: 1, b: 2, c: 3 });
+  });
+});
+
+describe('arrayOf', function () {
+  it('is a function', function () {
+    assert.typeOf(arrayOf, 'function');
   });
   it('defaults to 1', function () {
-    var func = many(1);
+    var func = arrayOf(1);
     var items = func();
     assert.deepEqual(items, [1]);
   });
   it('uses a number as options', function () {
-    var func = many(1, 2);
+    var func = arrayOf(1, 2);
     var items = func();
     assert.deepEqual(items, [1, 1]);
   });
   it('uses len', function () {
-    var func = many(1, { len: 2 });
+    var func = arrayOf(1, { len: 2 });
     var items = func();
     assert.deepEqual(items, [1, 1]);
   });
   it('uses minLen, maxLen', function () {
-    var func = many(1, { minLen: 1, maxLen: 3 });
+    var func = arrayOf(1, { minLen: 1, maxLen: 3 });
     var items = func();
     assert.isTrue(items.length >= 1 && items.length <= 3);
   });
   it('uses unique', function () {
-    var func = many(pick([1, 2, 3, 4]), { len: 2, unique: true });
+    var func = arrayOf(pick([1, 2, 3, 4]), { len: 2, unique: true });
     var items = func();
     assert.equal(items.length, 2);
     assert.notEqual(items[0], items[1]);
   });
-  it('generates a object', function () {
-    var func = many(pick([1, 2]), { len: 2, key: function (val) {
-      return val.toString();
-    } });
-    var items = func();
-    assert.deepEqual(items, { '1': 1, '2': 2 });
-  });
-  it('uses a map', function () {
-    var func = many(1, { len: 2, map: function (n) { return n + 3; } });
-    var items = func();
-    assert.deepEqual(items, [4, 4]);
-  });
-  it('uses a map with an object', function () {
-    var func = many(pick([1, 2]), { len: 2, key: function (val) {
-      return val.toString();
-    },
-    map: function (n) { return n + 3; }});
-    var items = func();
-    assert.deepEqual(items, { '1': 4, '2': 5 });
-  });
-  describe('alternative init style', function () {
-    it('init using opts', function () {
-      var func = many(1).opts({ len: 2 });
-      var items = func();
-      assert.deepEqual(items, [1, 1]);
-    });
-    it('init using len', function () {
-      var func = many(1).len(2);
-      var items = func();
-      assert.deepEqual(items, [1, 1]);
-    });
-    it('init using chaining', function () {
-      var func = many(1).minLen(1).maxLen(3);
-      var items = func();
-      assert.isTrue(items.length >= 1 && items.length <= 3);
-    });
-  });
+});
 
+describe('objectOf', function () {
+  it('is a function', function () {
+    assert.typeOf(objectOf, 'function');
+  });
+  it('defaults to 1', function () {
+    var func = objectOf(1);
+    var items = func();
+    assert.deepEqual(items, { '1': 1 });
+  });
+  it('uses a number as options', function () {
+    var func = objectOf(1, 2);
+    var items = func();
+    assert.deepEqual(items, { '2': 1, '3': 1 });
+  });
+  it('uses key', function () {
+    var c = 0;
+    var func = objectOf(1, { len: 2, key: function (n) { return c++;} });
+    var items = func();
+    assert.deepEqual(items, { '0': 1, '1': 1 });
+  });
 });
