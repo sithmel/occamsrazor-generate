@@ -1,3 +1,3 @@
-var getChance = require('../lib/get-chance');
+var getChance = require('../lib/get-chance')
 
-module.exports = getChance();
+module.exports = getChance()
