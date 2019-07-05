@@ -32,7 +32,7 @@ module.exports = function iterableOf (obj, opts) {
         }
       }
     }
-      
+
     iterable[Symbol.iterator] = iterable
     return iterable
   }
