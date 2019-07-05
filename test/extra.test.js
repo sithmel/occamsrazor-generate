@@ -5,6 +5,7 @@ var pick = require('../extra/pick')
 var mapItems = require('../extra/mapItems')
 var mapItem = require('../extra/mapItem')
 var arrayOf = require('../extra/arrayOf')
+var iterableOf = require('../extra/iterableOf')
 var objectOf = require('../extra/objectOf')
 
 describe('shuffle', function () {
@@ -108,6 +109,27 @@ describe('arrayOf', function () {
   })
 })
 
+describe('iterableOf', function () {
+  it('is a function', function () {
+    assert.typeOf(iterableOf, 'function')
+  })
+  it('defaults to 1', function () {
+    var func = iterableOf(1, 3)
+    var items = Array.from(func())
+    assert.deepEqual(items, [1, 1, 1])
+  })
+  it('uses len', function () {
+    var func = iterableOf(1, { len: 2 })
+    var items = Array.from(func())
+    assert.deepEqual(items, [1, 1])
+  })
+  it('uses minLen, maxLen', function () {
+    var func = iterableOf(1, { minLen: 1, maxLen: 3 })
+    var items = Array.from(func())
+    assert.isTrue(items.length >= 1 && items.length <= 3)
+  })
+})
+
 describe('objectOf', function () {
   it('is a function', function () {
     assert.typeOf(objectOf, 'function')
@@ -115,12 +137,12 @@ describe('objectOf', function () {
   it('defaults to 1', function () {
     var func = objectOf(1)
     var items = func()
-    assert.deepEqual(items, { '1': 1 })
+    assert.deepEqual(Object.values(items), [1])
   })
   it('uses a number as options', function () {
     var func = objectOf(1, 2)
     var items = func()
-    assert.deepEqual(items, { '2': 1, '3': 1 })
+    assert.deepEqual(Object.values(items), [1, 1])
   })
   it('uses key', function () {
     var c = 0

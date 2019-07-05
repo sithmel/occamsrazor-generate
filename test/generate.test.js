@@ -62,4 +62,18 @@ describe('generate', function () {
   it('unrolls an iterator', function () {
     assert.deepEqual(generate(range(3))(), [0, 1, 2])
   })
+
+  describe('merge values', function () {
+    it('adds a new attribute', function () {
+      assert.deepEqual(generate({ a: 1 }, { b: 2 })(), { a: 1, b: 2 })
+    })
+
+    it('overrides an attribute', function () {
+      assert.deepEqual(generate({ a: 1 }, { a: 2 })(), { a: 2 })
+    })
+
+    it('overrides an attribute', function () {
+      assert.deepEqual(generate([{ a: 1 }], [{ a: 2 }])(), [{ a: 2 }])
+    })
+  })
 })
