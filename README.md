@@ -52,6 +52,17 @@ const genUser = generate({
 genUser() // returns { title: 'mr', name: 'Ekdcsrlyl Cfrpsugx' }
 ```
 
+Override generated values
+-------------------------
+The function returned by generate can optionally take an argument. This is merged into the generated object. You can also use a function and this will be used to transform the generated object into something else.
+```js
+genUser({ id: 1 }) // returns { id: 1, title: 'mr', name: 'Ekdcsrlyl Cfrpsugx' }
+
+// or
+
+getUser((obj) => return { ...obj, id: obj.name.replace(' ', '-').toLowerCase() }) // returns { id: 'ekdcsrlyl-cfrpsugx', title: 'mr', name: 'Ekdcsrlyl Cfrpsugx' }
+```
+
 chancejs integration
 ====================
 [Chance](http://chancejs.com) is a nice library to generate random values. This library includes a wrapper to use it.

@@ -18,8 +18,8 @@ describe('generate', function () {
     assert.equal(generate(true)(), true)
   })
   it('returns function', function () {
-    var f = function () {}
-    assert.equal(generate(f), f)
+    var f = function () { return 1 }
+    assert.equal(generate(f)(), 1)
   })
   it('clones an object', function () {
     assert.deepEqual(generate({ a: 1 })(), { a: 1 })
@@ -65,15 +65,15 @@ describe('generate', function () {
 
   describe('merge values', function () {
     it('adds a new attribute', function () {
-      assert.deepEqual(generate({ a: 1 }, { b: 2 })(), { a: 1, b: 2 })
+      assert.deepEqual(generate({ a: 1 })({ b: 2 }), { a: 1, b: 2 })
     })
 
     it('overrides an attribute', function () {
-      assert.deepEqual(generate({ a: 1 }, { a: 2 })(), { a: 2 })
+      assert.deepEqual(generate({ a: 1 })({ a: 2 }), { a: 2 })
     })
 
     it('overrides an attribute', function () {
-      assert.deepEqual(generate([{ a: 1 }], [{ a: 2 }])(), [{ a: 2 }])
+      assert.deepEqual(generate([{ a: 1 }])([{ a: 2 }]), [{ a: 2 }])
     })
   })
 })

@@ -23,17 +23,15 @@ module.exports = function iterableOf (obj, opts) {
       n = len || chance('natural', { min: minLen, max: maxLen })()
     }
 
-    var iterable = function () {
-      return {
-        next: function () {
-          if (n === 0) return { done: true }
-          n--
-          return { done: false, value: func() }
-        }
+    var iter = {
+      next: function () {
+        if (n === 0) return { done: true }
+        n--
+        return { done: false, value: func() }
       }
     }
 
-    iterable[Symbol.iterator] = iterable
-    return iterable
+    iter[Symbol.iterator] = function () { return iter }
+    return iter
   }
 }
